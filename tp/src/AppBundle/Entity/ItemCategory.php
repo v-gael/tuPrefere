@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * ItemCategory
  *
@@ -29,18 +29,10 @@ class ItemCategory
     private $titre;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="slug", type="string", length=255, nullable=true)
-     */
-    private $slug;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="enable", type="boolean", nullable=true)
-     */
-    private $enable;
+      * @Gedmo\Slug(fields={"titre"})
+      * @ORM\Column(name="slug", type="string", length=255, unique=true)
+      */
+     private $slug;
 
     /**
      * @var \DateTime
@@ -49,6 +41,10 @@ class ItemCategory
      */
     private $createdAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="itemCategory")
+    */
+    private $items;
 
     /**
      * Get id
@@ -88,53 +84,6 @@ class ItemCategory
     {
         return $this->titre.'';
     }
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     *
-     * @return ItemCategory
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * Set enable
-     *
-     * @param boolean $enable
-     *
-     * @return ItemCategory
-     */
-    public function setEnable($enable)
-    {
-        $this->enable = $enable;
-
-        return $this;
-    }
-
-    /**
-     * Get enable
-     *
-     * @return bool
-     */
-    public function getEnable()
-    {
-        return $this->enable;
-    }
 
     /**
      * Set createdAt
@@ -158,5 +107,70 @@ class ItemCategory
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->items = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add item
+     *
+     * @param \AppBundle\Entity\Vote $item
+     *
+     * @return ItemCategory
+     */
+    public function addItem(\AppBundle\Entity\Vote $item)
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * Remove item
+     *
+     * @param \AppBundle\Entity\Vote $item
+     */
+    public function removeItem(\AppBundle\Entity\Vote $item)
+    {
+        $this->items->removeElement($item);
+    }
+
+    /**
+     * Get items
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     *
+     * @return ItemCategory
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

@@ -41,8 +41,15 @@ twig:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver: pdo_sqlite
-        path: '%kernel.project_dir%/app/sqlite.db'
+#        driver: pdo_sqlite
+#        path: '%kernel.project_dir%/app/sqlite.db'
+
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
         charset: UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
@@ -91,6 +98,11 @@ easy_admin:
     site_name: 'toto'
     design:
         brand_color: 'red'
+        menu:
+          - {'route': 'homepage', label: 'Accès public'}
+          - {'entity': 'Propositions', label: 'Propositions', 'icon': 'tag'}
+          - {'entity': 'ItemCategory', label: 'ItemCategory', 'icon': 'tag'}
+          - {'entity': 'Post', label: 'Post', 'icon': 'tag'}
     entities:
         Propositions:
           class: AppBundle\Entity\Item
@@ -98,17 +110,22 @@ easy_admin:
             fields:
               - titre
               - {property: 'image', type: 'vich_image', data_class: null}
-              - category
+              - itemCategory
               - url_video
-              - enable
           list:
             fields:
               - titre
-              - category
+              - itemCategory
               - {property: 'imageName', type: 'image', base_path: '/uploads/'}
-              - enable
         ItemCategory:
           class: AppBundle\Entity\ItemCategory
+          list:
+            fields:
+              - titre
+          form:
+            fields:
+              - { property: 'titre', type: 'textarea'}
+
         User:
           class: AppBundle\Entity\User
           form:
@@ -128,11 +145,12 @@ easy_admin:
             fields:
               - title
               - {property: 'imageName', type: 'image', base_path: '/uploads/'}
-              - enable
+              - content
           form:
             fields:
               - { property: 'title', type: 'textarea'}
               - { property: 'photo', type: 'vich_image', data_class: null}
+              - { property: 'content', type: 'textarea'}
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
@@ -143,3 +161,9 @@ fos_user:
         address:        noreply@example.com
         sender_name:    Demo App
     user_class: AppBundle\Entity\User
+
+# Stof\DoctrineExtensionsBundle configuration
+stof_doctrine_extensions:
+    orm:
+        default:
+            sluggable: true

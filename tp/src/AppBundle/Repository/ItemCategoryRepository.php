@@ -10,4 +10,29 @@ namespace AppBundle\Repository;
  */
 class ItemCategoryRepository extends \Doctrine\ORM\EntityRepository
 {
+  public function itemCategoriesPlusItemAll()
+  {
+    return $this->createQueryBuilder('i')
+                ->orderBy('i.titre', 'ASC')
+                ->leftJoin('i.items', 'items')
+                ->addOrderBy('items.nbVote', 'DESC')
+                ->addSelect('items')
+                ->getQuery()
+                ->getResult()
+                ;
+  }
+
+  public function itemCategoriesPlusItem($slug)
+  {
+    return $this->createQueryBuilder('i')
+                ->where('i.slug = :slug')
+                ->setParameter('slug', $slug)
+                ->leftJoin('i.items', 'items')
+                ->addOrderBy('items.nbVote', 'DESC')
+                ->addSelect('items')
+                ->getQuery()
+                ->getSingleResult()
+                ;
+  }
+
 }

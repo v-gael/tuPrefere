@@ -20,4 +20,6 @@ class AdminController extends BaseAdminController
         $this->get('fos_user.user_manager')->updateUser($user, false);
         parent::updateEntity($user);
     }
+
+
 }

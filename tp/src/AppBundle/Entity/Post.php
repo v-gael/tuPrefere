@@ -8,13 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Post
  *
  * @ORM\Table(name="post")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PostRepository")
  * @Vich\Uploadable
+ * @ORM\HasLifecycleCallbacks
  */
 class Post
 {
@@ -31,11 +32,16 @@ class Post
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
-     * @Assert\Length(min=10, max=155, minMessage="Trop court", maxMessage="Texte trop long")
+     * @Assert\Length(min=3, max=155, minMessage="Trop court", maxMessage="Texte trop long")
      * @Assert\NotBlank(message="Ne peut pas etre vide")
      */
     private $title;
 
+    /**
+      * @Gedmo\Slug(fields={"title"})
+      * @ORM\Column(name="slug", type="string", length=255, unique=true)
+      */
+     private $slug;
 
     /**
      * @var \DateTime
@@ -50,13 +56,6 @@ class Post
      * @ORM\Column(name="content", type="text", nullable=true)
      */
     private $content;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="enable", type="boolean", nullable=true)
-     */
-    private $enable;
 
     /**
      * @var File
@@ -177,64 +176,13 @@ class Post
     }
 
     /**
-     * Set enable
-     *
-     * @param boolean $enable
-     *
-     * @return Post
-     */
-    public function setEnable($enable)
-    {
-        $this->enable = $enable;
-
-        return $this;
-    }
-
-    /**
-     * Get enable
-     *
-     * @return bool
-     */
-    public function getEnable()
-    {
-        return $this->enable;
-    }
-
-
-    /**
-     * Set category
-     *
-     * @param \AppBundle\Entity\PostCategory $category
-     *
-     * @return Post
-     */
-    public function setCategory(\AppBundle\Entity\PostCategory $category = null)
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return \AppBundle\Entity\PostCategory
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-
-
-    /**
      * Set photo
      *
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $photo
      *
      * @return Post
      */
-    public function setPhoto(?File $photo)
+    public function setPhoto(File $photo)
     {
         $this->photo = $photo;
         if (null !== $photo) {
@@ -322,8 +270,46 @@ class Post
      *
      * @return \DateTime
      */
-    public function getUpdatedAt()
+     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+      *
+      * @ORM\PrePersist
+      * @ORM\PreUpdate
+      */
+    public function updatedTimestamps()
+    {
+       $this->setUpdatedAt(new \DateTime('now'));
+
+       if ($this->getDateCreated() == null) {
+           $this->setDateCreated(new \DateTime('now'));
+       }
+    }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     *
+     * @return Post
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

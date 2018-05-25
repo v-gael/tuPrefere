@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <h1>Le top de la catégorie <b>{{ itemCategory.titre }}</b></h1>
+
+
+
+
+    {% for item in itemCategory.items %}
+    <div class="card panel-default ">
+        <div class="card-header">n°{{ loop.index }}: {{ item.titre }} <b> / {{ item.nbVote }} votes!</b></div>
+        <div class="card-body">
+          infos supplémentaire sur l'item
+        </div>
+    </div>
+    {% endfor %}
+
+  <br>
+  <div class="row">
+    {% if insuffisant == 0 %}
+    <a href="{{ path('categorie', {'slug': itemCategory.slug, 'id': item1.id}) }}" style="display:block;background-color:#5bc2eb;height:300px;text-align:center;color:white;" class="col-md-6 col-sm-12">
+      <b>{{ item1.titre }}</b>
+    </a>
+    <a href="{{ path('categorie', {'slug': itemCategory.slug, 'id': item2.id}) }}" style="display:block;background-color:#dd2928;height:300px;text-align:center;color:white;" class="col-md-6 col-sm-12">
+      <b>{{ item2.titre }}</b>
+    </a>
+    {% else %}
+    <p>il n'y a actuellement pas asser d'item dans cette catégorie pour voter ¯\_(ツ)_/¯</p>
+    {% endif %}
+  </div>
+{% endblock %}

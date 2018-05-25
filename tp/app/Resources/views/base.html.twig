@@ -20,16 +20,7 @@
     'AppBundle\\Controller\\DefaultController::getMenuAction',
     {'route': app.request.attributes.get('_route')}
     )) }}
-
-    <div class="container">
-    {% if app.user %}
-        <div class="float-right">
-        <i class="fa fa-user"></i> Utilisateur : {{ app.user.username }}
-
-            {% if is_granted('ROLE_SUPER_ADMIN') %}TOP{% endif %}
-        </div>
-    {% endif  %}
-    </div>
+<br>
 {% endblock %}
 <div class="container">
     {% for label, messages in app.flashes %}

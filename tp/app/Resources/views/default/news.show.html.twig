@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <h1>{{ post.title }}</h1>
+
+  {% if post.photo %}
+    <img src="{{ vich_uploader_asset(post, 'photo', 'AppBundle\\Entity\\Post') }}" alt="" style="width:100px;height:auto;;"/>
+  {% endif %}
+
+  <p>{{ post.content }}</p>
+  <a href="{{ url('news') }}">retour aux news</a>
+{% endblock %}

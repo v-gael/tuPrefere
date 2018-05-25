@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <h1>Les nouvelles <b>NEWS</b></h1>
+  <table class="table table-stripped">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Image</th>
+        <th scope="col">Titre</th>
+        <th scope="col">Lien</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+      <tr>
+        <td>
+          {% if post.photo %}
+            <img src="{{ vich_uploader_asset(post, 'photo', 'AppBundle\\Entity\\Post') }}" alt="" style="width:100px;height:auto;;"/>
+          {% endif %}
+        </td>
+        <td>
+          {{ post.title }}
+        </td>
+        <td>
+          <a href="{{ path('news_show', {'slug': post.slug}) }}">Voir l'article</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url('recherchehp') }}">rechercher une news</a>
+
+{% endblock %}

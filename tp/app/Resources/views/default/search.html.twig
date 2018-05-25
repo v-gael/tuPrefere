@@ -7,13 +7,14 @@
     {% if news %}
         <div class="container">
             <div class="card-columns">
-                {% for item in news %}
+                {% for post in news %}
                     <div class="">
                         <div class="card panel-default ">
-                            <div class="card-header">{{ item.title }}</div>
+                            <div class="card-header">{{ post.title }}</div>
                             <div class="card-body">
-                                {{ item.content }}
+                                {{ post.content }}
                             </div>
+                            <a href="{{ path('news_show', {'slug': post.slug}) }}">Voir l'article</a>
                         </div>
                     </div>
                 {% endfor %}

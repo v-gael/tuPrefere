@@ -10,4 +10,16 @@ namespace AppBundle\Repository;
  */
 class ItemRepository extends \Doctrine\ORM\EntityRepository
 {
+
+  public function persoFindByItemCategory($slug)
+  {
+    return $this->createQueryBuilder('i')
+                ->leftJoin('i.itemCategory', 'itemCategory')
+                ->where('itemCategory.slug = :slug')
+                ->setParameter('slug', $slug)
+                ->getQuery()
+                ->getResult()
+                ;
+  }
+
 }

@@ -32,11 +32,13 @@ security:
             anonymous: ~
             switch_user: true
             pattern: ^/
+            provider: fos_userbundle
             form_login:
-                provider: fos_userbundle
-                default_target_path: /admin
-                #csrf_provider: security.csrf.token_manager # Use form.csrf_provider instead for Symfony <2.4
-            logout:       true
+              login_path: fos_user_security_login
+              check_path: fos_user_security_check
+            logout:
+              path:       fos_user_security_logout
+              target:     fos_user_security_login
             anonymous:    true
 
             # activate different ways to authenticate

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <h1>Les tops <b>Tu préfère</b></h1>
+  {% for itemCategory in itemCategories %}
+  <div class="">
+      <div class="card panel-default ">
+          <div class="card-header">{{ itemCategory.titre }}</div>
+          <div class="card-body">
+              {% for item in itemCategory.items %}
+                {% if loop.first %}
+                  {{ item.titre }} <b>{{ item.nbVote }} votes!</b>
+                {% endif %}
+              {% endfor %}
+          </div>
+          <a href="{{ path('categorie', {'slug': itemCategory.slug}) }}">Voir top catégorie</a>
+
+      </div>
+  </div>
+  <br>
+  {% endfor %}
+{% endblock %}

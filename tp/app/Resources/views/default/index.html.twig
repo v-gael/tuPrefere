@@ -1,5 +1,83 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Bienvenue sur mon site</h1>
+
+    <h1 style="text-align:center;">Tu préfère?</h1>
+
+    <div class="row">
+      {% for message in app.session.flashbag.get('success') %}
+      <div class="alert alert-success" role="alert">{{ message }}</div>
+      {% endfor %}
+      {% for message in app.session.flashbag.get('warning') %}
+      <div class="alert alert-warning" role="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+
+    {% if insuffisant == 0 %}
+    <div class="row">
+      <a href="{{ path('homepage', {'id': item1.id}) }}" style="display:block;background-color:#5bc2eb;height:300px;text-align:center;color:white;" class="col-md-6 col-sm-12">
+        <b>{{ item1.titre }}</b>
+      </a>
+      <a href="{{ path('homepage', {'id': item2.id}) }}" style="display:block;background-color:#dd2928;height:300px;text-align:center;color:white;" class="col-md-6 col-sm-12">
+        <b>{{ item2.titre }}</b>
+      </a>
+    </div>
+    {% else %}
+    <p>il n'y a actuellement pas asser d'item pour voter ¯\_(ツ)_/¯</p>
+    {% endif %}
+
+    <br>
+    <div class="row">
+      {% if app.user %}
+      <div class="col-md-6 col-sm-12">
+      {% else %}
+      <div class="col-md-12 col-sm-12">
+      {% endif %}
+        <h1>Les 10 derniers votes</h1>
+        <hr>
+        <table class="table table-stripped">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#Vote</th>
+              <th scope="col">Utilisateur</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vote in votes %}
+            <tr>
+              <td><b>{{ vote.item.titre }}</b></td>
+              <td>
+              {% if vote.user %}
+                {{ vote.user.username }}
+              {% else %}
+                anonyme
+              {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if app.user %}
+      <div class="col-md-6 col-sm-12">
+          <h1>Mes 5 derniers votes</h1>
+          <hr>
+          <table class="table table-stripped">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#Vote</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for vote in votesPerso %}
+              <tr>
+                <td><b>{{ vote.item.titre }}</b></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+
 {% endblock %}

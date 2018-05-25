@@ -13,6 +13,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Table(name="item")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ItemRepository")
  * @Vich\Uploadable
+ * @ORM\HasLifecycleCallbacks()
  */
 class Item
 {
@@ -24,6 +25,20 @@ class Item
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="nbVote", type="integer")
+     */
+    private $nbVote=0;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="lastVote", type="datetime", nullable=true)
+     */
+    private $lastVote;
 
     /**
      * @var string
@@ -62,13 +77,6 @@ class Item
     private $urlVideo;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="enable", type="boolean", nullable=true)
-     */
-    private $enable;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="createdAt", type="datetime", nullable=true)
@@ -76,9 +84,15 @@ class Item
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ItemCategory")
+      * @ORM\ManyToOne(targetEntity="ItemCategory", inversedBy="items")
+      * @ORM\JoinColumn(nullable=true)
      */
-    private $category;
+    private $itemCategory;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Vote", mappedBy="item")
+     */
+    private $votes;
 
     /**
      * Get id
@@ -168,30 +182,6 @@ class Item
     }
 
     /**
-     * Set enable
-     *
-     * @param boolean $enable
-     *
-     * @return Item
-     */
-    public function setEnable($enable)
-    {
-        $this->enable = $enable;
-
-        return $this;
-    }
-
-    /**
-     * Get enable
-     *
-     * @return bool
-     */
-    public function getEnable()
-    {
-        return $this->enable;
-    }
-
-    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
@@ -213,6 +203,30 @@ class Item
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set lastVote
+     *
+     * @param \DateTime $lastVote
+     *
+     * @return Item
+     */
+    public function setLastVote()
+    {
+        $this->lastVote = new \DateTime() ;
+
+        return $this;
+    }
+
+    /**
+     * Get lastVote
+     *
+     * @return \DateTime
+     */
+    public function getLastVote()
+    {
+        return $this->lastVote;
     }
 
     /**
@@ -288,26 +302,98 @@ class Item
     }
 
     /**
-     * Set category
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->votes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add vote
      *
-     * @param \AppBundle\Entity\ItemCategory $category
+     * @param \AppBundle\Entity\Vote $vote
      *
      * @return Item
      */
-    public function setCategory(\AppBundle\Entity\ItemCategory $category = null)
+    public function addVote(\AppBundle\Entity\Vote $vote)
     {
-        $this->category = $category;
+        $this->votes[] = $vote;
 
         return $this;
     }
 
     /**
-     * Get category
+     * Remove vote
+     *
+     * @param \AppBundle\Entity\Vote $vote
+     */
+    public function removeVote(\AppBundle\Entity\Vote $vote)
+    {
+        $this->votes->removeElement($vote);
+    }
+
+    /**
+     * Get votes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVotes()
+    {
+        return $this->votes;
+    }
+
+    /**
+     * Set itemCategory
+     *
+     * @param \AppBundle\Entity\ItemCategory $itemCategory
+     *
+     * @return Item
+     */
+    public function setItemCategory(\AppBundle\Entity\ItemCategory $itemCategory = null)
+    {
+        $this->itemCategory = $itemCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get itemCategory
      *
      * @return \AppBundle\Entity\ItemCategory
      */
-    public function getCategory()
+    public function getItemCategory()
     {
-        return $this->category;
+        return $this->itemCategory;
+    }
+
+    public function __toString()
+    {
+        return $this->titre.'';
+    }
+
+    public function getNbVote()
+    {
+      return $this->nbVote;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function updateNbVote()
+    {
+      $nbVote = 0;
+      foreach ($this->votes as $vote) {
+        $nbVote++;
+      }
+      $this->nbVote = $nbVote;
+      return $this;
+    }
+
+    public function setNbVote($nbVote)
+    {
+      $this->nbVote = $nbVote;
+      return $this;
     }
 }
