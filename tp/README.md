@@ -1,72 +1,46 @@
-Symfony Standard Edition
-========================
+# Projet symfony tu préfères
+initialisation du Projet
+--------------------------
+- créer une base de donnée mysql propre au projet
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
+*installation des dépendances*
+- composer install
 
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
+*création des tables*
+- php bin/cosole doctrine:schema:update --dump-sql
+- php bin/cosole doctrine:schema:update --force
 
-What's inside?
---------------
+*créer un utilisateur*
+il est possible de créer un utilisateur de deux manières:
+- **via register:** 127.0.0.1:8000/register
+- **en ligne de commande:** php bin/console fos:user:create admin admin@admin.com password
 
-The Symfony Standard Edition is configured with the following defaults:
+**note:** *la gestion des rôle n'étant pas évalué, toutes personnes peut accéder à l'administration une fois enregistré*
 
-  * An AppBundle you can use to start coding;
+" Cahier des charges"
+5 pages
+-------------------
+*Homepage avec :*
+:heavy_check_mark: **3 points** une section "Tu préfères" avec deux choix cliquables random (sans notion de catégories) au clic on comptabilise le vote et on renvoie vers la Homepage avec de nouveaux choix avec un message "Votre vote a bien été pris en compte"
+:heavy_check_mark: **3 points** un panneau de login (si déjà loggé on affiche le pseudo et un bouton de déconnexion et ses 5 derniers votes)
+:heavy_check_mark: **3 points** les 10 derniers votes de tout le monde
 
-  * Twig as the only configured template engine;
+**note:** *en cas d'utilisateur non connecté, la mention annonyme est affiché en face du vote*
 
-  * Doctrine ORM/DBAL;
 
-  * Swiftmailer;
+:heavy_check_mark: **Présentation :** **1 point** avec un texte lorem non dynamique
+:heavy_check_mark: **Recherche :** **3 points** Recherche dans les news
+:heavy_check_mark: **News :** **3 points** page de news avec détails (avec slug dans l'url et non id) et bouton retour
+:heavy_check_mark: **Tops par catégories :**
+:heavy_check_mark:   **3 points** Reprendre la liste des catégories et afficher le vainqueur de la catégorie.
+:heavy_check_mark:   **3 points** Au clic sur une catégorie on a accès (toujours avec un slug et non id) au top par catégorie : une section "Tu préfères" avec deux choix randoms mais de la catégorie sélectionnée.
 
-  * Annotations enabled for everything.
+**note:** *mention spéciale à celui là qui était bien chaud :clap:, de base j'étais parti sur une fonction getNbVotes() dans un item avec un lifeCycleCallBack en PreUpdate avec un changement de timestamp pour faire proc l'update, mais irrécupérable par le repository...(car pas un champ de BDD)*
+*Complication aussi pour twig de récupérer et trier une fois les item récupéré* :confused:
+*Du coup j'ai créer un champ nbVote en BDD qui change avec un preUpdate (c'est fonctionnel),* **mais je suis intéressé de savoir s'il y avait une solution plus astucieuse pour contourner ces difficultés** (:email: ou :octocat: si oui :pray:)
 
-It comes pre-configured with the following bundles:
+:heavy_check_mark: Les urls devront être SEO friendly et sans GET parameters.
+**note :** *les articles et catégories utilisent des slugs mais je ne l'ai pas utilisé pour les item car peu utile*
 
-  * **FrameworkBundle** - The core Symfony framework bundle
 
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev env) - Adds code generation
-    capabilities
-
-  * [**WebServerBundle**][14] (in dev env) - Adds commands for running applications
-    using the PHP built-in web server
-
-  * **DebugBundle** (in dev/test env) - Adds Debug and VarDumper component
-    integration
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  https://symfony.com/doc/3.4/setup.html
-[6]:  https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  https://symfony.com/doc/3.4/doctrine.html
-[8]:  https://symfony.com/doc/3.4/templating.html
-[9]:  https://symfony.com/doc/3.4/security.html
-[10]: https://symfony.com/doc/3.4/email.html
-[11]: https://symfony.com/doc/3.4/logging.html
-[13]: https://symfony.com/doc/current/bundles/SensioGeneratorBundle/index.html
-[14]: https://symfony.com/doc/current/setup/built_in_web_server.html
+Bon courage pour les corrections et désolé du retard :persevere:
