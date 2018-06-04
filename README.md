@@ -18,8 +18,11 @@ cd sf_lp2018/tp/
 il est possible de créer un utilisateur de deux manières:
 - **via register:** 127.0.0.1:8000/register
 - **en ligne de commande:** php bin/console fos:user:create admin admin@admin.com password
+- :warning: **Upgrade l'utilisateur:** php bin/console fos:user:promote admin ROLE_SUPER_ADMIN :warning: (nécessaire pour que le lien d'accès à la partie admin soit visible dans le menu)
 
 **note:** *la gestion des rôle n'étant pas évalué, toutes personnes peut accéder à l'administration une fois enregistré*
+
+
 
 " Cahier des charges"
 5 pages
